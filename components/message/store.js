@@ -1,7 +1,7 @@
 const db = require('mongoose');
+const { findById, findOne } = require('./model');
 const Model = require('./model');
 require('dotenv').config();
-// mongodb+srv://cesareli17188:hAPtCwUFeMo6jykw@cluster0.gxkowbp.mongodb.net/telegram
 
 db.Promise = global.Promise;
 
@@ -18,14 +18,24 @@ function addMessage(message) {
     myMessage.save();
 }
 
-async function getMessages() {
-    return await Model.find();
+async function getMessages(filterUser) {
+    let filter = {};
+    if(filterUser !== null) {
+        filter = {user: filterUser};
+    }
+    return await Model.find(filter);
+}
+
+async function updateText(id, message) {
+    const foundMessage = await Model.findOne({_id: id});
+    foundMessage.message = message;
+    return await foundMessage.save();
 }
 
 module.exports = {
     add: addMessage,
     list: getMessages,
+    updateText: updateText,
     //get
-    //update
     // delete
 } 

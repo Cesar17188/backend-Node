@@ -4,8 +4,9 @@ const controller = require("./controller");
 const router = express.Router();
 
 router.get("/", async(req, res) => {
+  const filterMessages = req.query.user || null;
     try {
-      const allMessages = await controller.getMessages();
+      const allMessages = await controller.getMessages(filterMessages);
       response.success(req, res, allMessages, 200);
     } catch (error) {
       response.error(req, res, error, 500, "Error getting messages");
@@ -35,6 +36,16 @@ router.post("/", async (req, res) => {
             "Es solo una simulación de los errores"
         );
   }
+});
+
+router.patch('/:id', async(req, res)=> {
+  await controller.updateMessage(req.params.id, req.body.message)
+  .then((data) => {
+    response.success(req, res, data, 200);
+  })
+  .catch(e => {
+    response.error((req, res, 'Error interno', 500, e));
+  });
 });
 
 module.exports = router;
