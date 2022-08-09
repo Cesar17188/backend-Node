@@ -6,7 +6,7 @@ const controller = require("./controller");
 const router = express.Router();
 
 const storage = multer.diskStorage({
-  destination: "uploads/",
+  destination: "public/files/",
   filename: (_req, file, cb)  => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
   }
@@ -28,7 +28,7 @@ router.get("/", async(req, res) => {
 
 router.post("/", upload.single('file'),  async (req, res) => {
   try {
-    const body = await controller.addMessage(req.body.chat, req.body.user, req.body.message);
+    const body = await controller.addMessage(req.body.chat, req.body.user, req.body.message, req.file);
 
     await response.success(req,res, 
         {
