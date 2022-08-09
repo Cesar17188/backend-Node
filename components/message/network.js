@@ -4,9 +4,10 @@ const path = require('path');
 const response = require("../../network/response");
 const controller = require("./controller");
 const router = express.Router();
+const config = require('../../config');
 
 const storage = multer.diskStorage({
-  destination: "public/files/",
+  destination: `public/${config.filesRoute}/`,
   filename: (_req, file, cb)  => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
   }
